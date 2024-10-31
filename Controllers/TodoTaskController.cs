@@ -6,6 +6,7 @@ using TaskerAPI.Data;
 using TaskerAPI.Models;
 using TaskerAPI.Models.DTOs;
 using TaskerAPI.Services;
+using TaskerAPI.Exceptions;
 
 namespace TaskerAPI.Controllers
 {
@@ -46,12 +47,11 @@ namespace TaskerAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoTaskResponseDTO>> GetTask(Guid id)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var task = await _context.Tasks
-                .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
+            var task = await _context.Tasks.FindAsync(id) 
+                ?? throw new TaskNotFoundException(id);
 
-            if (task == null)
-                return NotFound();
+            if (!User.IsInRole("Admin") && task.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
+                throw new UnauthorizedTaskAccessException();
 
             return new TodoTaskResponseDTO
             {

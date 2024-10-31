@@ -4,11 +4,21 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TaskerAPI.Services;
+using TaskerAPI.Middleware;
+using FluentValidation.AspNetCore;
+using TaskerAPI.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+// Add FluentValidation
+builder.Services.AddFluentValidation(fv => 
+{
+    fv.RegisterValidatorsFromAssemblyContaining<CreateTodoTaskValidator>();
+    fv.AutomaticValidationEnabled = true;
+});
 
 // Configure DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -44,6 +54,9 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
+
+// Add this before other middleware
+app.UseMiddleware<GlobalExceptionHandler>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

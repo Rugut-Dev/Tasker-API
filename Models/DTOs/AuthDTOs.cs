@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using TaskerAPI.Models.Enums;
 
 namespace TaskerAPI.Models.DTOs
 {
@@ -14,6 +15,8 @@ namespace TaskerAPI.Models.DTOs
         [Required]
         [MinLength(6)]
         public string Password { get; set; }
+
+        // public Roles Role { get; set; } = Roles.User;
     }
 
     public class LoginDTO

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskerAPI.Data;
 using TaskerAPI.Models;
 using TaskerAPI.Models.DTOs;
+using TaskerAPI.Services;
 
 namespace TaskerAPI.Controllers
 {
@@ -79,8 +80,8 @@ namespace TaskerAPI.Controllers
             _context.Tasks.Add(task);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetTask), 
-                new { id = task.Id }, 
+            return CreatedAtAction(nameof(GetTask),
+                new { id = task.Id },
                 new TodoTaskResponseDTO
                 {
                     Id = task.Id,
@@ -128,5 +129,19 @@ namespace TaskerAPI.Controllers
 
             return NoContent();
         }
+
+        // [HttpGet("all")]
+        // [Authorize(Policy = PolicyService.RequireAdmin)]
+        // public async Task<ActionResult<IEnumerable<TodoTaskResponseDTO>>> GetAllTasks()
+        // {
+        //     // Implementation
+        // }
+
+        // [HttpGet("department")]
+        // [Authorize(Policy = PolicyService.RequireManager)]
+        // public async Task<ActionResult<IEnumerable<TodoTaskResponseDTO>>> GetDepartmentTasks()
+        // {
+        //     // Implementation
+        // }
     }
-} 
+}

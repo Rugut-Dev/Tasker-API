@@ -5,7 +5,8 @@ namespace TaskerAPI.Models
 {
     public class TodoTask
     {
-        public int Id { get; set; }
+        [Key]
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         public string Title { get; set; }
